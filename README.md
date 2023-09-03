@@ -1,6 +1,7 @@
 # Sharebook
 MERN?
 In the project directory, you can run:
+upnew branch merge
 
 ### `npm start`
 
