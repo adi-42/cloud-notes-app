@@ -38,7 +38,7 @@ router.post('/addnote', fetchuser, [
     }
 });
 
-//Update an existing note: Post -> "/api/notes/updatenote". Login token req.
+//Update an existing note: Put -> "/api/notes/updatenote". Login token req.
 router.put('/updatenote/:id', fetchuser, [
     body('title', 'Title cannot be empty').notEmpty(),
     body('description', 'Description cannot be empty').notEmpty()
@@ -66,6 +66,25 @@ router.put('/updatenote/:id', fetchuser, [
         };
         note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote}, {new:true});
         res.json(note);
+    } catch (error) { 
+        console.log(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+//Delete note: Delete -> "/api/notes/deletenote". Login token req.
+router.delete('/deletenote/:id', fetchuser, async (req, res) => {
+    try {
+        //find note to be deleted
+        let note = await Note.findById(req.params.id);
+        if(!note){
+            return res.status(404).send("Note does not exist");
+        };
+        if(note.user.toString() !== req.user.id){
+            return res.status(401).send("Access restricted");
+        };
+        note = await Note.findByIdAndDelete(req.params.id);
+        res.json({"Status":"Note has been deleted", note});
     } catch (error) { 
         console.log(error.message);
         res.status(500).send("Internal Server Error");
