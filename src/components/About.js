@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react';
+import noteContext from '../context/notes/noteContext';
+ 
 
 export default function About() {
+  const a = useContext(noteContext);
+  useEffect(()=>{
+    a.update();
+  }, [])
   return (
-    <div>This is About</div>
+    <div>This is About of {a.state.name}, of msft {a.state.class}</div>
   )
 }
